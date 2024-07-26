@@ -3,7 +3,7 @@
 client_id = "5c62e3ea9e68f3cf8aba982763b96fe8"
 name = "checkout-ui-ext"
 handle = "checkout-ui-ext-42"
-application_url = "https://al-seeing-cm-latino.trycloudflare.com"
+application_url = "https://stan-slightly-dust-moms.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_customers,write_discounts"
 
 [auth]
 redirect_urls = [
-  "https://al-seeing-cm-latino.trycloudflare.com/auth/callback",
-  "https://al-seeing-cm-latino.trycloudflare.com/auth/shopify/callback",
-  "https://al-seeing-cm-latino.trycloudflare.com/api/auth/callback"
+  "https://stan-slightly-dust-moms.trycloudflare.com/auth/callback",
+  "https://stan-slightly-dust-moms.trycloudflare.com/auth/shopify/callback",
+  "https://stan-slightly-dust-moms.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
