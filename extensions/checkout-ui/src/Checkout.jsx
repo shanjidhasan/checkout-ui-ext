@@ -4,11 +4,12 @@ import {
   BlockStack,
   Checkbox,
   Text,
-  useApi,
   useApplyAttributeChange,
-  useInstructions,
-  useTranslate,
+  useAppMetafields,
+  useSubtotalAmount,
+  useAttributeValues
 } from "@shopify/ui-extensions-react/checkout";
+import React, { useState } from 'react';
 
 // 1. Choose an extension target
 export default reactExtension("purchase.checkout.block.render", () => (
@@ -16,41 +17,52 @@ export default reactExtension("purchase.checkout.block.render", () => (
 ));
 
 function Extension() {
-  const translate = useTranslate();
-  const { extension } = useApi();
-  const instructions = useInstructions();
   const applyAttributeChange = useApplyAttributeChange();
+  const subtoTalAmount = useSubtotalAmount().amount;
 
+  console.log("subtoTalAmount: ", subtoTalAmount);
 
-  // 2. Check instructions for feature availability, see https://shopify.dev/docs/api/checkout-ui-extensions/apis/cart-instructions for details
-  if (!instructions.attributes.canUpdateAttributes) {
-    // For checkouts such as draft order invoices, cart attributes may not be allowed
-    // Consider rendering a fallback UI or nothing at all, if the feature is unavailable
-    return (
-      <Banner title="checkout-ui" status="warning">
-        {translate("attributeChangesAreNotSupported")}
-      </Banner>
-    );
+  const attributeValues = useAttributeValues([
+    'requestedCustomDiscount'  
+  ]);
+
+  let checked = false;
+  if (attributeValues.length > 0) {
+    checked = attributeValues[0] === 'yes';
+  }
+  console.log("checked: ", checked);
+
+  console.log("attributeValues: ", attributeValues);
+
+  const discountsMetafield = useAppMetafields({
+    type: 'customer',
+    namespace: 'custom',
+    key: 'discounts'
+  });
+
+  let discountPercent = 0;
+  if (discountsMetafield.length > 0) {
+    discountPercent = discountsMetafield[0].metafield.value;
+    console.log('discountPercent: ', discountPercent);
+    // applyDiscount(discountPercent);
   }
 
   // 3. Render a UI
   return (
     <BlockStack border={"dotted"} padding={"tight"}>
-      <Banner title="checkout-ui">
-        {translate("welcome", {
-          target: <Text emphasis="italic">{extension.target}</Text>,
-        })}
+      <Banner title="Checkout Discount">
+        {<Text>{`You have custom discount of ${discountPercent}%`}</Text>}
       </Banner>
-      <Checkbox onChange={onCheckboxChange}>
-        {translate("iWouldLikeAFreeGiftWithMyOrder")}
+      <Checkbox onChange={onCheckboxChange} checked={checked}>
+        {<Text>{`I would like to recieve the discount`}</Text>}
       </Checkbox>
     </BlockStack>
   );
 
   async function onCheckboxChange(isChecked) {
-    // 4. Call the API to modify checkout
+    console.log("Checkbox checked:", isChecked);
     const result = await applyAttributeChange({
-      key: "requestedFreeGift",
+      key: "requestedCustomDiscount",
       type: "updateAttribute",
       value: isChecked ? "yes" : "no",
     });

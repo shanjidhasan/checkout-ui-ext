@@ -1,0 +1,35 @@
+query RunInput {
+  cart {
+    attribute (key: "requestedCustomDiscount") {
+      key
+      value
+    }
+    buyerIdentity {
+      customer {
+        id
+        metafield ( 
+          key: "discounts"
+          namespace: "custom"
+          ) {
+            type
+            value
+          }
+      }
+    }
+    lines {
+      id
+      quantity
+      merchandise {
+        ... on ProductVariant {
+          id
+          product {
+            inCollections(ids: ["gid://shopify/Collection/477085073712"]) {  # Retrieve the collections the product belongs to
+              collectionId
+              isMember
+            }
+          }
+        }
+      }
+    }
+  }
+}
