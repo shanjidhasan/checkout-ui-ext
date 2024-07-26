@@ -30,3 +30,22 @@ model Session {
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
 }
+
+model PixelData {
+  id        Int      @id @default(autoincrement())
+  event     String
+  productIds String?
+  customerFirstName String?
+  customerLastName  String?
+  customerEmail     String?
+  customerPhone     String?
+  orderCount        Int?
+  cartId            String?
+  cartTotalAmount   Float?
+  shopName          String?
+  shopCurrencyCode  String?
+  shopCountryCode   String?
+  shopDomain        String?
+  storefrontUrl     String?
+  createdAt DateTime @default(now())
+}

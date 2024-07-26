@@ -7,7 +7,8 @@ import {
   useApplyAttributeChange,
   useAppMetafields,
   useSubtotalAmount,
-  useAttributeValues
+  useAttributeValues,
+  useApi
 } from "@shopify/ui-extensions-react/checkout";
 import React, { useState } from 'react';
 
@@ -17,13 +18,14 @@ export default reactExtension("purchase.checkout.block.render", () => (
 ));
 
 function Extension() {
+  const { analytics } = useApi();
   const applyAttributeChange = useApplyAttributeChange();
   const subtoTalAmount = useSubtotalAmount().amount;
 
   console.log("subtoTalAmount: ", subtoTalAmount);
 
   const attributeValues = useAttributeValues([
-    'requestedCustomDiscount'  
+    'requestedCustomDiscount'
   ]);
 
   let checked = false;
@@ -44,10 +46,8 @@ function Extension() {
   if (discountsMetafield.length > 0) {
     discountPercent = discountsMetafield[0].metafield.value;
     console.log('discountPercent: ', discountPercent);
-    // applyDiscount(discountPercent);
   }
 
-  // 3. Render a UI
   return (
     <BlockStack border={"dotted"} padding={"tight"}>
       <Banner title="Checkout Discount">
@@ -60,6 +60,7 @@ function Extension() {
   );
 
   async function onCheckboxChange(isChecked) {
+    emitCustomWebPixelEvent(isChecked);
     console.log("Checkbox checked:", isChecked);
     const result = await applyAttributeChange({
       key: "requestedCustomDiscount",
@@ -67,5 +68,10 @@ function Extension() {
       value: isChecked ? "yes" : "no",
     });
     console.log("applyAttributeChange result", result);
+  }
+
+  function emitCustomWebPixelEvent(isChecked) {
+    const event_data = { isChecked: isChecked };
+    analytics.publish('customDiscountEvent', event_data);
   }
 }

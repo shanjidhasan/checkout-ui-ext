@@ -30,7 +30,7 @@ export function run(input) {
       return {
         errors: [
           {
-            localizedMessage: `Discount cannot be applied to orders less than 100 ${input.cart.cost.totalAmount.currency}`,
+            localizedMessage: `Discount cannot be applied to orders less than 100 ${input.cart.cost.totalAmount.currencyCode}`,
             target: "cart",
           },
         ],

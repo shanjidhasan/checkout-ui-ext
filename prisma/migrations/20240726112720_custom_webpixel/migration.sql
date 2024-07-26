@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "PixelData" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "event" TEXT NOT NULL,
+    "data" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
